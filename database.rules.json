@@ -1,0 +1,97 @@
+{
+  "rules": {
+    ".read": "auth != null && (auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true)",
+    ".write": "auth != null && (auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true)",
+    "users": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true))",
+        ".write": "auth != null && (auth.uid === $uid || (auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true))"
+      }
+    },
+    "publicProfiles": {
+      ".read": "auth != null",
+      ".indexOn": ["usernameKey", "netWorth"],
+      "$uid": {
+        ".write": "auth != null && ((auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true) || (auth.uid === $uid && root.child('usernameIndex').child(newData.child('usernameKey').val()).val() === auth.uid))",
+        ".validate": "newData.hasChildren(['uid', 'username', 'usernameKey', 'displayName', 'netWorth', 'level']) && newData.child('uid').val() === $uid && newData.child('netWorth').isNumber() && newData.child('level').isNumber()"
+      }
+    },
+    "usernameIndex": {
+      ".read": "auth != null",
+      "$usernameKey": {
+        ".write": "auth != null && ((auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true) || (!data.exists() && newData.val() === auth.uid) || (!newData.exists() && data.val() === auth.uid))",
+        ".validate": "!newData.exists() || newData.isString()"
+      }
+    },
+    "transfers": {
+      "$recipientUid": {
+        ".read": "auth != null && (auth.uid === $recipientUid || (auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true))",
+        "$transferId": {
+          ".read": "auth != null && (auth.uid === $recipientUid || data.child('senderUid').val() === auth.uid || (auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth != null && ((auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true) || (!data.exists() && newData.child('senderUid').val() === auth.uid && newData.child('recipientUid').val() === $recipientUid && newData.child('amount').isNumber() && newData.child('amount').val() > 0))",
+          ".validate": "newData.hasChildren(['senderUid', 'recipientUid', 'amount', 'type', 'createdAt', 'availableAt']) && newData.child('type').val().matches(/^(pix|transfer)$/)"
+        }
+      }
+    },
+    "checkbook": {
+      "$recipientUid": {
+        ".read": "auth != null && (auth.uid === $recipientUid || (auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true))",
+        "$checkId": {
+          ".read": "auth != null && (auth.uid === $recipientUid || data.child('senderUid').val() === auth.uid || (auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true))",
+          ".write": "auth != null && ((auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true) || (!data.exists() && newData.child('senderUid').val() === auth.uid && newData.child('recipientUid').val() === $recipientUid && newData.child('amount').isNumber() && newData.child('amount').val() > 0))",
+          ".validate": "newData.hasChildren(['senderUid', 'recipientUid', 'amount', 'createdAt'])"
+        }
+      }
+    },
+    "transferClaims": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true))",
+        "$transferId": {
+          ".write": "auth != null && ((auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true) || (auth.uid === $uid && !data.exists() && newData.val() === auth.uid))"
+        }
+      }
+    },
+    "checkClaims": {
+      "$uid": {
+        ".read": "auth != null && (auth.uid === $uid || (auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true))",
+        "$checkId": {
+          ".write": "auth != null && ((auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true) || (auth.uid === $uid && !data.exists() && newData.val() === auth.uid))"
+        }
+      }
+    },
+    "casinoFeed": {
+      ".read": "auth != null",
+      ".indexOn": ["at"],
+      "$entryId": {
+        ".write": "auth != null && ((auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true) || (!data.exists() && newData.child('uid').val() === auth.uid && newData.child('stake').isNumber() && newData.child('stake').val() > 0))"
+      }
+    },
+    "duels": {
+      ".read": "auth != null",
+      "$duelId": {
+        ".read": "auth != null",
+        ".write": "auth != null && ((auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true) || (!data.exists() && newData.child('creatorUid').val() === auth.uid && newData.child('stake').isNumber() && newData.child('stake').val() >= 500))",
+        "participants": {
+          "$uid": {
+            ".write": "auth != null && ((auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true) || (auth.uid === $uid && (!data.exists() || data.child('uid').val() === auth.uid)))",
+            ".validate": "newData.hasChildren(['uid', 'name', 'joinedAt']) && newData.child('uid').val() === $uid"
+          }
+        },
+        "result": {
+          ".write": "auth != null && ((auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true) || (root.child('duels').child($duelId).child('creatorUid').val() === auth.uid && !data.exists()))",
+          ".validate": "newData.hasChildren(['winnerUid', 'winnerName', 'resolvedAt'])"
+        }
+      }
+    },
+    "system": {
+      ".read": "auth != null",
+      "config": {
+        ".write": "auth != null && (auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true)"
+      }
+    },
+    "adminLog": {
+      ".read": "auth != null && (auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true)",
+      ".write": "auth != null && (auth.token.email === 'lucaslcloux12@gmail.com' && auth.token.email_verified === true)"
+    }
+  }
+}

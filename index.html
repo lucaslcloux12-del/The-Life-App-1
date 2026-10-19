@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#080b12" />
+  <meta name="description" content="The Life App — construa sua fortuna em uma economia virtual de luxo." />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <title>The Life App — Sua vida. Suas regras.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.js"></script>
+</head>
+<body>
+  <div class="ambient ambient-one"></div>
+  <div class="ambient ambient-two"></div>
+  <div id="loading-screen" class="loading-screen" role="status" aria-live="polite">
+    <div class="loading-mark"><span class="mark-glyph">L</span></div>
+    <div class="loading-title">THE LIFE <span>APP</span></div>
+    <div class="loading-line"><i></i></div>
+    <p>Preparando sua próxima vida</p>
+  </div>
+
+  <section id="startup-error" class="startup-error hidden" role="alert" aria-live="assertive">
+    <div class="startup-error-card">
+      <div class="startup-error-symbol">!</div>
+      <div class="startup-error-eyebrow">INICIALIZAÇÃO INTERROMPIDA</div>
+      <h1>Não foi possível iniciar o The Life App.</h1>
+      <p>O navegador não conseguiu carregar o código do jogo ou conectar seus módulos de inicialização.</p>
+      <div id="startup-error-detail" class="startup-error-detail">A inicialização excedeu o tempo esperado.</div>
+      <div class="startup-error-help">
+        <strong>Como resolver</strong>
+        <p>Abra o site pelo endereço HTTPS do GitHub Pages, não abrindo o arquivo <code>index.html</code> diretamente no computador. Se já estiver publicado, confira se <code>app.js</code>, <code>catalog.js</code> e <code>firebase-config.js</code> estão na mesma pasta do <code>index.html</code>, envie todas as alterações ao GitHub e atualize com <strong>Ctrl + F5</strong>.</p>
+        <p>Se continuar, pressione <strong>F12</strong>, abra <strong>Console</strong> e verifique a primeira mensagem em vermelho.</p>
+      </div>
+      <button class="button button-primary startup-retry" type="button" onclick="window.location.reload()">Tentar novamente</button>
+    </div>
+  </section>
+
+  <section id="auth-screen" class="auth-screen hidden">
+    <div class="auth-showcase">
+      <div class="auth-brand"><div class="brand-symbol">L</div><div><strong>THE LIFE <span>APP</span></strong><small>VIRTUAL LIFESTYLE</small></div></div>
+      <div class="showcase-copy">
+        <div class="eyebrow"><span class="eyebrow-dot"></span> SEU PRÓXIMO NÍVEL COMEÇA AQUI</div>
+        <h1>Uma vida<br /><em>sem limites.</em></h1>
+        <p>Trabalhe. Invista. Construa seu império. Faça cada decisão valer.</p>
+      </div>
+      <div class="showcase-orbit orbit-a"></div><div class="showcase-orbit orbit-b"></div>
+      <div class="showcase-stat"><span class="tiny-label">PATRIMÔNIO É UMA JORNADA</span><strong>01 <i>/</i> ∞</strong><span>Comece sua história hoje.</span></div>
+      <div class="showcase-footer"><span>THE LIFE APP</span><span>ECONOMIA VIRTUAL · TEMPORADA 01</span></div>
+    </div>
+    <div class="auth-panel">
+      <div class="auth-card">
+        <div class="auth-mobile-brand"><div class="brand-symbol">L</div><strong>THE LIFE <span>APP</span></strong></div>
+        <div class="auth-heading"><div class="eyebrow">ACESSO À PLATAFORMA</div><h2 id="auth-title">Entre no seu mundo.</h2><p id="auth-subtitle">Continue de onde sua história parou.</p></div>
+        <div class="auth-tabs"><button class="auth-tab active" data-auth-mode="login">Entrar</button><button class="auth-tab" data-auth-mode="register">Criar conta</button></div>
+        <div class="segmented auth-identity-switch" style="margin:0 0 14px"><button type="button" class="active" data-identity-mode="email">E-mail</button><button type="button" data-identity-mode="username">Nome de usuário</button></div>
+        <form id="auth-form" autocomplete="on">
+          <label class="field-label" for="auth-identity" id="identity-label">E-mail</label>
+          <div class="input-wrap"><i data-lucide="user-round"></i><input id="auth-identity" name="identity" type="text" placeholder="voce@exemplo.com" autocomplete="username" required /></div>
+          <div id="auth-identity-hint" class="field-hint">Use seu e-mail cadastrado.</div>
+          <div id="register-name-group" class="hidden">
+            <label class="field-label" for="auth-display-name">Nome no jogo</label>
+            <div class="input-wrap"><i data-lucide="id-card"></i><input id="auth-display-name" name="displayName" type="text" placeholder="Como você será conhecido" maxlength="24" /></div>
+          </div>
+          <label class="field-label" for="auth-password">Senha</label>
+          <div class="input-wrap"><i data-lucide="lock-keyhole"></i><input id="auth-password" name="password" type="password" placeholder="Mínimo de 6 caracteres" minlength="6" autocomplete="current-password" required /><button type="button" class="input-icon-button" id="toggle-password" aria-label="Mostrar senha"><i data-lucide="eye"></i></button></div>
+          <div id="auth-error" class="auth-error hidden" role="alert"></div>
+          <button id="auth-submit" class="button button-primary auth-submit" type="submit"><span>Entrar na plataforma</span><i data-lucide="arrow-up-right"></i></button>
+        </form>
+        <div class="auth-separator"><span></span><small>OU CONTINUE COM</small><span></span></div>
+        <button id="google-login" class="button button-outline google-button"><span class="google-g">G</span> Continuar com Google</button>
+        <p class="auth-terms">Ao continuar, você concorda em jogar com respeito. A economia do jogo é virtual e não representa dinheiro real.</p>
+        <div class="auth-bottom"><span>Protegido por Firebase Authentication</span><span><i data-lucide="shield-check"></i> CONEXÃO SEGURA</span></div>
+      </div>
+    </div>
+  </section>
+
+  <div id="application" class="application hidden">
+    <aside class="sidebar" id="sidebar">
+      <a href="#home" class="brand-lockup" data-view="home"><div class="brand-symbol">L</div><div class="brand-text"><strong>THE LIFE <span>APP</span></strong><small>VIRTUAL LIFESTYLE</small></div></a>
+      <div class="sidebar-account"><div class="account-avatar" id="sidebar-avatar">L</div><div class="account-info"><strong id="sidebar-name">Visitante</strong><span id="sidebar-tier">MEMBRO</span></div><button class="icon-button" data-action="open-profile" aria-label="Perfil"><i data-lucide="settings-2"></i></button></div>
+      <div class="nav-caption">SEU ESPAÇO</div>
+      <nav class="primary-nav" id="desktop-nav">
+        <button class="nav-item active" data-view="home"><i data-lucide="layout-dashboard"></i><span>Visão geral</span></button>
+        <button class="nav-item" data-view="work"><i data-lucide="briefcase-business"></i><span>Carreira</span><span class="nav-count">120+</span></button>
+        <button class="nav-item" data-view="casino"><i data-lucide="club"></i><span>Clube</span><span class="nav-live"></span></button>
+        <button class="nav-item" data-view="bank"><i data-lucide="landmark"></i><span>Banco privado</span></button>
+        <button class="nav-item" data-view="cards"><i data-lucide="credit-card"></i><span>Cartões</span></button>
+        <button class="nav-item" data-view="market"><i data-lucide="chart-no-axes-combined"></i><span>Investimentos</span></button>
+        <button class="nav-item" data-view="stores"><i data-lucide="shopping-bag"></i><span>Shopping</span><span class="nav-count">120</span></button>
+        <button class="nav-item" data-view="transfer"><i data-lucide="arrow-left-right"></i><span>Transferências</span></button>
+        <button class="nav-item" data-view="checks"><i data-lucide="file-check-2"></i><span>Cheques</span></button>
+        <button class="nav-item" data-view="rankings"><i data-lucide="trophy"></i><span>Classificação</span></button>
+        <button class="nav-item" data-view="apps"><i data-lucide="grid-2x2"></i><span>Central de apps</span></button>
+        <button class="nav-item admin-nav hidden" data-view="admin"><i data-lucide="shield-check"></i><span>Administração</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="season-card"><div class="season-top"><span class="season-icon"><i data-lucide="crown"></i></span><span class="season-status">TEMPORADA 01</span></div><strong>Construa seu legado.</strong><p>Seu próximo marco está mais perto do que parece.</p><div class="season-progress"><span style="width:18%"></span></div><div class="season-foot"><span>JORNADA PESSOAL</span><span>18%</span></div></div>
+        <button class="nav-item logout-item" data-action="logout"><i data-lucide="log-out"></i><span>Sair da conta</span></button>
+        <div class="sidebar-legal">ECONOMIA SIMULADA · SEM VALOR MONETÁRIO REAL</div>
+      </div>
+    </aside>
+
+    <main class="main-shell">
+      <header class="topbar">
+        <div class="topbar-left"><button id="mobile-menu" class="icon-button mobile-menu-button" aria-label="Abrir menu"><i data-lucide="menu"></i></button><div class="breadcrumb"><span>THE LIFE APP</span><i data-lucide="chevron-right"></i><strong id="current-section">Visão geral</strong></div></div>
+        <div class="topbar-right"><div class="market-status"><span class="status-pulse"></span><span>ECONOMIA ATIVA</span></div><button class="icon-button notification-button" data-view="transfer" aria-label="Notificações"><i data-lucide="bell"></i><span class="notification-dot"></span></button><div class="topbar-divider"></div><button class="wallet-pill" data-view="bank"><span class="wallet-pill-icon"><i data-lucide="wallet"></i></span><span><small>SALDO DISPONÍVEL</small><strong id="topbar-cash">Cr$ 0</strong></span><i data-lucide="chevron-down"></i></button><button class="topbar-avatar" id="topbar-avatar" data-action="open-profile">L</button></div>
+      </header>
+      <section class="page-container" id="view-container" aria-live="polite"></section>
+      <footer class="app-footer"><span>THE LIFE APP <i>·</i> VIRTUAL LIFESTYLE PLATFORM</span><span>MOEDA VIRTUAL SEM VALOR MONETÁRIO REAL</span></footer>
+    </main>
+
+    <nav class="mobile-bottom-nav" id="mobile-bottom-nav">
+      <button data-view="home" class="active"><i data-lucide="layout-dashboard"></i><span>Início</span></button>
+      <button data-view="work"><i data-lucide="briefcase-business"></i><span>Carreira</span></button>
+      <button data-view="casino"><i data-lucide="club"></i><span>Clube</span></button>
+      <button data-view="bank"><i data-lucide="landmark"></i><span>Banco</span></button>
+      <button data-view="apps"><i data-lucide="grid-2x2"></i><span>Apps</span></button>
+    </nav>
+  </div>
+
+  <div id="modal-root"></div>
+  <div id="toast-stack" class="toast-stack" aria-live="polite"></div>
+  <script>
+    // Independent watchdog: this script still runs if app.js or a Firebase CDN import fails.
+    (function () {
+      var completed = false;
+      var loading = function () { return document.getElementById("loading-screen"); };
+      var timer = window.setTimeout(function () {
+        fail("A inicialização não respondeu dentro de 20 segundos. Isso normalmente indica um arquivo ausente, erro de importação ou bloqueio de rede.");
+      }, 20000);
+      function finish() {
+        if (completed) return;
+        completed = true;
+        window.clearTimeout(timer);
+        var screen = loading();
+        if (screen) {
+          screen.classList.add("fade-out");
+          window.setTimeout(function () { screen.remove(); }, 450);
+        }
+      }
+      function fail(message) {
+        if (completed) return;
+        completed = true;
+        window.clearTimeout(timer);
+        var screen = loading();
+        if (screen) screen.remove();
+        var detail = document.getElementById("startup-error-detail");
+        if (detail) detail.textContent = message || "Falha ao carregar os módulos do jogo.";
+        document.getElementById("startup-error")?.classList.remove("hidden");
+      }
+      window.__TLA_BOOT = { success: finish, fail: fail };
+    })();
+  </script>
+  <script type="module" src="app.js" onerror="window.__TLA_BOOT && window.__TLA_BOOT.fail('O arquivo app.js ou uma importação necessária falhou ao carregar. Confira a conexão e os caminhos dos arquivos no GitHub Pages.')"></script>
+</body>
+</html>
